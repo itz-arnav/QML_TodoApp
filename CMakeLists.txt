@@ -20,8 +20,9 @@ qt_add_qml_module(appTodoApp
         Main.qml
     RESOURCES
         Images.qrc
-        QML_FILES Utils/AppPopup.qml Utils/CustomTextField.qml
+        QML_FILES Utils/AppPopup.qml Utils/CustomTextField.qml Utils/CustomScrollbar.qml
         SOURCES backendhelper.h backendhelper.cpp
+        QML_FILES Utils/EditPopup.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

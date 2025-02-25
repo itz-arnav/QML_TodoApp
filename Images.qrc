@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>Images/check.svg</file>
         <file>Images/search.svg</file>
+        <file>Images/delete.svg</file>
+        <file>Images/edit.svg</file>
     </qresource>
 </RCC>

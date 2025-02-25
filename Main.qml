@@ -23,8 +23,9 @@ Window {
         spacing: 10
 
         CustomTextField {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.preferredWidth: 350
+            Layout.fillWidth: true
+            Layout.leftMargin: 16
+            Layout.rightMargin: 16
             Layout.preferredHeight: 40
         }
 
@@ -38,7 +39,7 @@ Window {
             Text {
                 text: BackendHelper.currentDay
                 font {
-                    pointSize: 36
+                    pointSize: 30
                     weight: Font.DemiBold
                 }
                 color: "#fff"
@@ -49,7 +50,7 @@ Window {
                 Text {
                     text: BackendHelper.currentMonth
                     font {
-                        pointSize: 14
+                        pointSize: 13
                         weight: Font.Medium
                     }
                     color: "#ddd"
@@ -58,7 +59,7 @@ Window {
                 Text {
                     text: BackendHelper.currentYear
                     font {
-                        pointSize: 12
+                        pointSize: 11
                         weight: Font.Medium
                     }
                     color: "#aaa"
@@ -72,16 +73,129 @@ Window {
             Text {
                 text: BackendHelper.currentDayOfWeek
                 font {
-                    pointSize: 14
+                    pointSize: 13
                     weight: Font.Medium
                 }
                 color: "#fff"
             }
-
         }
 
-        Item {
+        ListView {
+            id: todoList
+            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.leftMargin: 16
+            Layout.rightMargin: 16
+
+            model: todoModel
+            delegate: todoDelegate
+
+            spacing: 8
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: CustomScrollbar{}
+        }
+
+        Button {
+            id: addItemButton
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredHeight: 40
+            Layout.preferredWidth: 200
+
+            contentItem: Text {
+                text: "Add Task"
+                font.pointSize: 12
+                color: "#fff"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+            }
+            background: Rectangle {
+                anchors.fill: parent
+                color: addItemButton.hovered ? Qt.darker("#2ba84a",1.1) : "#2ba84a"
+                radius: 10
+            }
+            onClicked: {
+                todoModel.append({
+                                 task: "New Task " + (todoModel.count + 1)
+                                 })
+                notificationPopup.showPopup("Item Added Successfully")
+            }
+        }
+
+    }
+
+    Component {
+        id: todoDelegate
+        Rectangle {
+            required property string task
+            required property int index
+
+            width: todoList.width
+            height: 50
+            color: "#363636"
+            radius: 12
+
+            RowLayout {
+                width: parent.width
+                anchors.verticalCenter: parent.verticalCenter
+
+                Text {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
+                    text: task
+                    font.pointSize: 12
+                    color: "#fafafa"
+                }
+
+                Image {
+                    Layout.preferredWidth: 18
+                    Layout.preferredHeight: 18
+                    Layout.alignment: Qt.AlignVCenter
+                    source: "qrc:/Images/edit.svg"
+
+                    MouseArea {
+                        cursorShape: Qt.PointingHandCursor
+                        anchors.fill: parent
+                        onClicked: {
+                            editItemPopup.showPopup(task, index)
+                        }
+                    }
+                }
+
+                Image {
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.rightMargin: 10
+                    Layout.alignment: Qt.AlignVCenter
+                    source: "qrc:/Images/delete.svg"
+
+                    MouseArea {
+                        cursorShape: Qt.PointingHandCursor
+                        anchors.fill: parent
+                        onClicked: {
+                            todoModel.remove(index)
+                            notificationPopup.showPopup("Item Deleted Successfully")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ListModel {
+        id: todoModel
+        ListElement {
+            task: "Finish the lecture"
+        }
+        ListElement {
+            task: "Code on my own"
+        }
+        ListElement {
+            task: "Improve the UI/UX"
+        }
+        ListElement {
+            task: "Upload this GitHub"
         }
     }
 
@@ -89,6 +203,15 @@ Window {
         id: notificationPopup
         x: root.width / 2 - width /2
         y: 30
-        popupText: qsTr("Opened the popup")
+    }
+
+    EditPopup {
+        id: editItemPopup
+        anchors.centerIn: parent
+
+        onUpdateListText: function(newText, index) {
+            todoModel.set(index, {
+                          task: newText})
+        }
     }
 }

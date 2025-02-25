@@ -9,13 +9,13 @@ Popup {
 
     property string popupText: ""
     width: 300
-    height: 60
+    height: 40
     closePolicy: Popup.NoAutoClose
     padding: 5
 
     background: Rectangle {
         radius: control.height/4
-        color: "#eaf7ee"
+        color: Qt.lighter("#cee4d2",1.1)
         border.width: 2
         border.color: "#cee4d2"
     }
@@ -26,22 +26,22 @@ Popup {
 
         Rectangle {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredWidth: 50
+            Layout.preferredWidth: 32
             Layout.fillHeight: true
             color: "#37b359"
             radius: height/3
 
             Rectangle {
                 anchors.centerIn: parent
-                width: 36
-                height: 36
+                width: 24
+                height: 24
                 radius: width/2
                 color: "#fff"
 
                 Image {
                     anchors.centerIn: parent
-                    width: 24
-                    height: 24
+                    width: 20
+                    height: 20
                     fillMode: Image.PreserveAspectFit
                     source: "qrc:/Images/check.svg"
                 }
@@ -55,7 +55,7 @@ Popup {
                 weight: Font.DemiBold
             }
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-            color: "#1a1a1a"
+            color: "#1e1e1e"
         }
 
         Item {
@@ -67,9 +67,14 @@ Popup {
 
     Timer {
         id: popupTimer
-        interval: 3000
+        interval: 1000
         repeat: false
         onTriggered: control.close()
+    }
+
+    function showPopup(displayText) {
+        control.popupText  = displayText
+        control.open()
     }
 }
 
